@@ -1,8 +1,0 @@
-[requires]
-opencv/3.4.5@conan/stable
-
-[options]
-opencv:shared=True # false
-
-[generators]
-cmake

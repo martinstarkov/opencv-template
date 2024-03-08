@@ -1,8 +1,9 @@
 .idea
-build
+[Bb]uild
 buildMinGW
 cmake-build-debug
 Debug
+Release
 .vs
 *.json
 *.sln

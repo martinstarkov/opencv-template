@@ -1,22 +1,23 @@
-cmake_minimum_required(VERSION 3.0)
-project(OpenCVProject)
-set(CMAKE_CXX_STANDARD 14)
-#set("OpenCV_DIR" "PATH")
+cmake_minimum_required(VERSION 3.22)
 
-find_package(OpenCV)
+project(simulation)
 
-if(OpenCV_FOUND)
-    include_directories(include ${OpenCV_INCLUDE_DIRS} src)
-    add_executable(test src/main.cpp 
-                             src/functions.cpp
-                             src/functions.h)
-    target_link_libraries(test ${OpenCV_LIBS})
-else()
-    include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-    conan_basic_setup()
-        include_directories(include src)
-        add_executable(test src/main.cpp 
-                                src/functions.cpp
-                                src/functions.h)
-        target_link_libraries(test ${CONAN_LIBS})
-endif()    
+set(CMAKE_CXX_STANDARD 17)
+
+find_package(OpenCV REQUIRED)
+
+file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS "src/*.c" "src/*.cpp")
+#file(GLOB_RECURSE HEADER_FILES CONFIGURE_DEPENDS "src/*.h" "src/*.hpp")
+
+add_executable(simulation ${SOURCE_FILES})
+target_include_directories(simulation PRIVATE src)
+target_link_libraries(simulation ${OpenCV_LIBS})
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT simulation)
+
+if (CMAKE_IMPORT_LIBRARY_SUFFIX)
+  add_custom_command(
+    TARGET simulation POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:simulation> $<TARGET_FILE_DIR:simulation>
+    COMMAND_EXPAND_LISTS
+  )
+endif ()

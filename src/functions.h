@@ -1,10 +1,5 @@
-#ifndef FUNCTIONS_H
-#define FUNCTIONS_H
+#pragma once
 
-#include<opencv2/core.hpp>
-#include<opencv2/highgui.hpp>
-#include<iostream>
+#include <opencv2/core.hpp>
 
 void show(const cv::Mat &);
-
-#endif

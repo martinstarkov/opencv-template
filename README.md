@@ -1,41 +1,67 @@
-# Quick setup for project using CMake and OpenCV.
+### Linux:
 
-### Requirements:
-1. OpenCV
-   - must be built with the same compiler which will be used in project,
-   - under Windows all environment variables must be set correctly
-     (i.e. OpenCV_DIR created and bin folder with all dlls added do PATH).
-2. Modern C++ compiler with C++14 standard support(MinGW, MSVC, Clang).
-3. Build automation program which is able to handle generated make file by CMake
-	(should be added to compiler's package and can be run with terminal or using IDE).
-4. CMake at least version 3.0.
-5. Optional Conan Package Manager.
-
-### Building:
-Note: built openCV library must be already installed
 ```
+sudo apt install build-essential cmake gcc libopencv-dev
 mkdir build
 cd build
-cmake .. -G "makefile generator" 
+cmake ..
 cmake --build .
 ```
 
-### Building with Conan:
+### Windows MSVC:
+
+Download and install the following dependencies:
+
+- [Visual Studio IDE](https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=Community&channel=Release&version=VS2022&source=VSLandingPage&cid=3602&passive=false)
+- OpenCV for Windows. [MSVC Specific Download Link](https://github.com/opencv/opencv/releases/download/4.9.0/opencv-4.9.0-windows.exe). OpenCV extract location is relevant later. I recommend placing it in `C:/opencv` for simplicity.
+- [CMake](<(https://github.com/Kitware/CMake/releases/download/v3.29.0-rc3/cmake-3.29.0-rc3-windows-x86_64.msi)>).
+
+Navigate to where you have cloned the simulation-pipeline repository. Open a terminal and enter the following commands in order.
+
 ```
 mkdir build
 cd build
-conan install ..
-cmake .. 
-cmake --build .
+cmake .. -DOpenCV_DIR="<path/where/you/extracted/opencv/build/x64/vc16/lib>"
 ```
-If CMake won't find OpenCV library it will try to use one obtained with Conan. If there is none, the example won't be built.
-### Examples for makefile generator above:
-- Visual Studio 15 2017 Win64(MSCV and nmake configured for Visual Studio)
-- MinGW Makefiles
-- Unix Makefiles
-	
-#### For non-unix systems make command should be changed to installed build automation tool like:
-- mingw32-make
-- nmake
-	
-If there is a problem with make builder then probably compiler's bin folder must be added to PATH environment variables.
+
+Note: DOpenCV_DIR is case sensitive.
+
+At this point you should be able to find a MSVC solution (.sln) file in the build directory (i.e. /path/to/simulation-pipeline/build).
+Open the solution file and run the program via the green "Local Windows Debugger" button at the top.
+
+When "Debug" is chosen in the configuration dropdown, OpenCV will output some error messages in the console but they can be ignored and do not appear if the configuration is switched to "Release"
+
+If you add new files to the project, ensure you rerun: (terminal inside the build directory)
+
+```
+cmake .. -DOpenCV_DIR="<path/where/you/extracted/opencv/build/x64/vc16/lib>"
+```
+
+This will regenerate all the necessary project files to recognize the newly added file.
+
+# Windows MSYS
+
+Download and install the following dependencies:
+
+- [Follow the instructions here](https://www.msys2.org/) to download [MSYS](https://github.com/msys2/msys2-installer/releases/download/2024-01-13/msys2-x86_64-20240113.exe) on Windows and afterward install [Ninja build tools](https://packages.msys2.org/package/mingw-w64-x86_64-ninja).
+- OpenCV for Windows. [MSYS Specific Download Link](https://github.com/huihut/OpenCV-MinGW-Build/tree/OpenCV-4.5.5-x64). OpenCV extract location is relevant later. I recommend placing it in `C:/opencv` for simplicity.
+- [CMake](<(https://github.com/Kitware/CMake/releases/download/v3.29.0-rc3/cmake-3.29.0-rc3-windows-x86_64.msi)>).
+
+Navigate to where you have cloned the simulation-pipeline repository. Open a terminal and enter the following commands in order.
+
+```
+mkdir build
+cd build
+cmake .. -DOpenCV_DIR="<path/where/you/extracted/opencv/build/x64/mingw/lib>"
+ninja
+```
+
+Note: DOpenCV_DIR is case sensitive.
+
+The built executable should be placed into the build directory.
+
+If you make changes or add new files to the project, ensure you rerun: (terminal inside the build directory)
+
+```
+ninja
+```
